@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 //
-import {View, Text, FlatList, StyleSheet, Button} from 'react-native';
+import {View, Text, FlatList, StyleSheet, Button, TouchableWithoutFeedback} from 'react-native';
 //
 import BlogContext from '../../src/context';
 
@@ -21,23 +21,21 @@ const styled = StyleSheet.create({
   },
 });
 const Main = ({navigation}: any) => {
-  
-  
 
-  
-  const BlogList = (item: any,index: number) => {
+  const {data, addBlog} = useContext(BlogContext);
 
-    console.log(index,"item")
-    
+  const BlogList = (item: any, index: number) => {
     return (
-      <View style={styled.blogList}>
+
+      <TouchableWithoutFeedback onLongPress={ ()=>addBlog("REMOVE_BLOG", item)}>
+        <View style={styled.blogList}>
         <Text>{item.title}</Text>
         <Text>O</Text>
       </View>
+      </TouchableWithoutFeedback>
+      
     );
   };
-
-  const {data, addBlog} = useContext(BlogContext);
 
   return (
     <View style={styled.container}>
@@ -45,9 +43,10 @@ const Main = ({navigation}: any) => {
       <FlatList
         data={data}
         keyExtractor={(blog: any) => blog.title}
-        renderItem={(item: any) => BlogList(item,item.index)}
+        renderItem={(item: any) => BlogList(item.item, item.index)}
       />
-      <Button title="add post" onPress={addBlog} /> 
+      <Button title="add post" onPress={()=>addBlog("ADD-BLOG")} />
+   
     </View>
   );
 };
